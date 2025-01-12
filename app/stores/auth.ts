@@ -21,6 +21,13 @@ export const useAuthStore = defineStore('auth', {
       this.token = ''
       this.username = ''
       this.role = ''
+      this.kycInfo = null
+      this.kpiData = {
+        totalUsers: 0,
+        approvedKYCs: 0,
+        rejectedKYCs: 0,
+        pendingKYCs: 0
+      }
       const tokenCookie = useCookie('jwtToken')
       tokenCookie.value = ''
     },

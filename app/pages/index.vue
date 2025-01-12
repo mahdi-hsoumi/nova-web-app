@@ -5,7 +5,7 @@ const { getKYC, getKPI } = useKyc()
 const loading = ref(true)
 
 onMounted(async () => {
-  if (authStore.role === 'user') {
+  if (authStore.role === 'user' && !authStore.kycInfo) {
     try {
       const response = await getKYC()
       authStore.setKYC(response)
