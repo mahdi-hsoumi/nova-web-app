@@ -13,6 +13,7 @@ const router = useRouter()
 const authStore = useAuthStore()
 const { login, register } = useAuth()
 const toast = useToast()
+const { getKYC, getKPI } = useKyc()
 
 const state = reactive({
   username: '',
@@ -69,6 +70,23 @@ const handleAuth = async () => {
           title: 'Login successful',
           description: 'You have logged in successfully.'
         })
+        if (userInfo.role === 'user') {
+          try {
+            const response = await getKYC()
+            authStore.setKYC(response)
+          } catch (error) {
+            console.error('Failed to fetch KYC information:', error)
+          } finally {
+            loading.value = false
+          }
+        } else if (userInfo.role === 'admin') {
+          try {
+            const response = await getKPI()
+            authStore.setKPI(response)
+          } catch (error) {
+            console.error('Failed to fetch KPI data:', error)
+          }
+        }
       }
     } else {
       await register({ username: state.username, email: state.email, password: state.password })
@@ -88,7 +106,7 @@ const handleAuth = async () => {
 </script>
 
 <template>
-  <div class="w-full flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+  <div class="w-full flex items-center justify-center h-screen">
     <UCard
       :ui="{ body: { base: 'w-full ' } }"
       class="w-full max-w-md p-6 space-y-4 bg-white dark:bg-gray-800 shadow-lg rounded-lg"

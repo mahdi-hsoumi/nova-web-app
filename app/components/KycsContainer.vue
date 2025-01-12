@@ -28,7 +28,7 @@ const toast = useToast()
 // Pagination state variables
 const pages = ref(1)
 const total = ref(10)
-const perPage = 10
+const perPage = 8
 const page = ref(1)
 
 // Users data and error state
@@ -154,107 +154,100 @@ function onSelect(row: User) {
 </script>
 
 <template>
-  <UDashboardPage>
-    <UDashboardPanel grow>
-      <UDashboardNavbar
-        title="Users"
-        :badge="total"
-      />
-
-      <UDashboardToolbar>
-        <template #left>
-          <USelectMenu
-            v-model="selectedStatuses"
-            icon="i-heroicons-check-circle"
-            placeholder="Status"
-            multiple
-            :options="defaultStatuses"
-            :ui-menu="{ option: { base: 'capitalize' } }"
+  <div>
+    <div class="flex justify-between">
+      <div class="flex">
+        <USelectMenu
+          v-model="selectedStatuses"
+          class="mr-2.5"
+          icon="i-heroicons-check-circle"
+          placeholder="Status"
+          multiple
+          :options="defaultStatuses"
+          :ui-menu="{ option: { base: 'capitalize' } }"
+        />
+        <UDropdown
+          :items="items"
+          :popper="{ placement: 'bottom-start' }"
+          class="mr-2.5   "
+        >
+          <UButton
+            color="white"
+            label="Actions"
+            trailing-icon="i-heroicons-chevron-down-20-solid"
           />
-        </template>
-        <template #right>
-          <UDropdown
-            :items="items"
-            :popper="{ placement: 'bottom-start' }"
-          >
-            <UButton
-              color="white"
-              label="Options"
-              trailing-icon="i-heroicons-chevron-down-20-solid"
-            />
-          </UDropdown>
-          <USelectMenu
-            v-model="selectedColumns"
-            icon="i-heroicons-adjustments-horizontal-solid"
-            :options="defaultColumns"
-            multiple
-            class="hidden lg:block"
-          >
-            <template #label>
-              Display
-            </template>
-          </USelectMenu>
-        </template>
-      </UDashboardToolbar>
-      <UModal v-model="isOpen">
-        <div class="p-4">
-          <img
-            :src="selectedIdDocument"
-            alt="ID Document"
-            class="max-w-full h-auto rounded"
-          >
-        </div>
-      </UModal>
-      <UTable
-        v-model="selected"
-        v-model:sort="sort"
-        :rows="users"
-        :columns="columns"
-        :loading="pending"
-        sort-mode="manual"
-        class="w-full"
-        :ui="{ divide: 'divide-gray-200 dark:divide-gray-800' }"
-        @select="onSelect"
+        </UDropdown>
+      </div>
+      <USelectMenu
+        v-model="selectedColumns"
+        icon="i-heroicons-adjustments-horizontal-solid"
+        :options="defaultColumns"
+        multiple
+        class="hidden lg:block "
       >
-        <template #name-data="{ row }">
-          <div class="flex items-center gap-3">
-            <UAvatar
-              v-bind="row.avatar"
-              :alt="row.name"
-              size="xs"
-            />
-
-            <span class="text-gray-900 dark:text-white font-medium">{{ row.name }}</span>
-          </div>
+        <template #label>
+          Display
         </template>
-
-        <template #status-data="{ row }">
-          <UBadge
-            :label="row.status"
-            :color="row.status === 'approved' ? 'green' : row.status === 'pending' ? 'orange' : 'red'"
-            variant="subtle"
-            class="capitalize"
+      </USelectMenu>
+    </div>
+    <UModal v-model="isOpen">
+      <div class="p-4">
+        <img
+          :src="selectedIdDocument"
+          alt="ID Document"
+          class="max-w-full h-auto rounded"
+        >
+      </div>
+    </UModal>
+    <UTable
+      v-model="selected"
+      v-model:sort="sort"
+      :rows="users"
+      :columns="columns"
+      :loading="pending"
+      sort-mode="manual"
+      class="w-full"
+      :ui="{ divide: 'divide-gray-200 dark:divide-gray-800' }"
+      @select="onSelect"
+    >
+      <template #name-data="{ row }">
+        <div class="flex items-center gap-3">
+          <UAvatar
+            v-bind="row.avatar"
+            :alt="row.name"
+            size="xs"
           />
-        </template>
-        <template #idDocument-data="{ row }">
-          <img
-            :src="row.idDocument"
-            alt="ID Document"
-            class="w-auto h-[30px] rounded"
-            @click="selectedIdDocument = row.idDocument; isOpen = true"
-          >
-        </template>
-      </UTable>
-      <UPagination
-        v-model="page"
-        :page-count="perPage"
-        :total="total"
-      />
-      <p v-if="error">
-        {{ error }}
-      </p>
-    </UDashboardPanel>
-  </UDashboardPage>
+
+          <span class="text-gray-900 dark:text-white font-medium">{{ row.name }}</span>
+        </div>
+      </template>
+
+      <template #status-data="{ row }">
+        <UBadge
+          :label="row.status"
+          :color="row.status === 'approved' ? 'green' : row.status === 'pending' ? 'orange' : 'red'"
+          variant="subtle"
+          class="capitalize"
+        />
+      </template>
+      <template #idDocument-data="{ row }">
+        <img
+          :src="row.idDocument"
+          alt="ID Document"
+          class="w-auto h-[30px] rounded"
+          @click="selectedIdDocument = row.idDocument; isOpen = true"
+        >
+      </template>
+    </UTable>
+    <UPagination
+      v-model="page"
+      :page-count="perPage"
+      :total="total"
+    />
+    <p v-if="error">
+      {{ error }}
+    </p>
+  </div>
 </template>
 
 <style scoped>

@@ -2,7 +2,14 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: '',
     username: '',
-    role: ''
+    role: '',
+    kycInfo: null,
+    kpiData: {
+      totalUsers: 0,
+      approvedKYCs: 0,
+      rejectedKYCs: 0,
+      pendingKYCs: 0
+    }
   }),
   actions: {
     setToken(token: string) {
@@ -22,6 +29,12 @@ export const useAuthStore = defineStore('auth', {
     },
     setRole(role: string) {
       this.role = role
+    },
+    setKYC(kycInfo) {
+      this.kycInfo = kycInfo
+    },
+    setKPI(kpiData) {
+      this.kpiData = kpiData
     }
   },
   getters: {

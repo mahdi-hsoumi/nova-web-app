@@ -31,7 +31,7 @@ const items = computed(() => [
         color="gray"
         variant="ghost"
         class="w-full"
-        :label="authStore.username"
+        :label="`${authStore.username} ${authStore.role}`"
         :class="[open && 'bg-gray-50 dark:bg-gray-800']"
       >
         <template #trailing>
