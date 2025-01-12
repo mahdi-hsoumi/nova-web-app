@@ -16,38 +16,40 @@ const { data: userInfo } = await useAsyncData<UserInfo>('userInfo', () => useNux
   }
 }))
 
-const username = ref('')
-const role = ref('')
+const role = computed(() => authStore.role)
 
 if (isAuthenticated.value && userInfo.value) {
-  username.value = userInfo.value.username
-  role.value = userInfo.value.role
-  authStore.setUsername(username.value)
-  authStore.setRole(role.value)
+  authStore.setUsername(userInfo.value.username)
+  authStore.setRole(userInfo.value.role)
 }
 
-const links = [{
-  id: 'home',
-  label: 'Home',
-  icon: 'i-heroicons-home',
-  to: '/',
-  tooltip: {
-    text: 'Home',
-    shortcuts: ['G', 'H']
-  }
-}]
-if (role.value === 'admin') {
-  links.push({
-    id: 'users',
-    label: 'Users',
-    icon: 'i-heroicons-user-group',
-    to: '/users',
+const links = computed(() => {
+  const baseLinks = [{
+    id: 'home',
+    label: 'Home',
+    icon: 'i-heroicons-home',
+    to: '/',
     tooltip: {
-      text: 'Users',
-      shortcuts: ['G', 'U']
+      text: 'Home',
+      shortcuts: ['G', 'H']
     }
-  })
-}
+  }]
+
+  if (role.value === 'admin') {
+    baseLinks.push({
+      id: 'kycs',
+      label: 'Kycs',
+      icon: 'i-heroicons-user-group',
+      to: '/kycs',
+      tooltip: {
+        text: 'Kycs',
+        shortcuts: ['G', 'K']
+      }
+    })
+  }
+
+  return baseLinks
+})
 </script>
 
 <template>

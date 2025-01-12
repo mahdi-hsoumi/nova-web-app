@@ -12,6 +12,7 @@ const errorMessage = ref('')
 const router = useRouter()
 const authStore = useAuthStore()
 const { login, register } = useAuth()
+const toast = useToast()
 
 const state = reactive({
   username: '',
@@ -64,10 +65,18 @@ const handleAuth = async () => {
       if (userInfo) {
         authStore.setUsername(userInfo.username)
         authStore.setRole(userInfo.role)
+        toast.add({
+          title: 'Login successful',
+          description: 'You have logged in successfully.'
+        })
       }
     } else {
       await register({ username: state.username, email: state.email, password: state.password })
       isLogin.value = true
+      toast.add({
+        title: 'Registration successful',
+        description: 'You have registered successfully. Please log in to continue.'
+      })
     }
   } catch (error) {
     errorMessage.value = error.data?.message || `${isLogin.value ? 'Login' : 'Registration'} failed.`
@@ -100,6 +109,7 @@ const handleAuth = async () => {
             placeholder="Username"
             required
             class="w-full"
+            @keyup.enter="handleAuth"
           />
         </div>
         <UInput
@@ -108,6 +118,7 @@ const handleAuth = async () => {
           placeholder="Email"
           required
           class="w-full"
+          @keyup.enter="handleAuth"
         />
         <UInput
           v-model="state.password"
@@ -115,6 +126,7 @@ const handleAuth = async () => {
           placeholder="Password"
           required
           class="w-full"
+          @keyup.enter="handleAuth"
         />
         <div
           class="text-red-500 text-center mt-4 h-[24px]"

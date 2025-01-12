@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useKyc } from '@/composables/useKyc'
 
 const { submitKYC } = useKyc()
+const toast = useToast()
 
 const state = reactive({
   name: '',
@@ -30,7 +31,11 @@ const handleSubmit = async () => {
     formData.append('idDocument', state.documentFile) // Ensure this matches the server's expected field name
 
     await submitKYC(formData)
-    alert('KYC submitted successfully!')
+    toast.add({
+      title: 'KYC Submission Successful',
+      description: 'Your KYC information has been submitted successfully. We will review it shortly.'
+    })
+    window.location.reload()
   } catch (error) {
     errorMessage.value = error.data.message || 'Failed to submit KYC. Please try again.'
   } finally {

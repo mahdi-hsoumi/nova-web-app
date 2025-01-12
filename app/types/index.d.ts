@@ -1,38 +1,14 @@
-import type { Avatar } from '#ui/types'
-
-export type UserStatus = 'subscribed' | 'unsubscribed' | 'bounced'
+export type UserStatus = 'pending' | 'approved' | 'rejected'
 
 export interface User {
-  id: number
-  name: string
-  email: string
-  avatar?: Avatar
-  status: UserStatus
-  location: string
-}
-
-export interface Mail {
-  id: number
-  unread?: boolean
-  from: User
-  subject: string
-  body: string
-  date: string
-}
-
-export interface Member {
-  name: string
+  _id: string
   username: string
-  role: 'member' | 'owner'
-  avatar: Avatar
-}
-
-export interface Notification {
-  id: number
-  unread?: boolean
-  sender: User
-  body: string
-  date: string
+  email: string
+  role: 'admin' | 'user'
+  status: UserStatus
+  idDocument?: string // Path to the uploaded ID document
+  createdAt: Date
+  updatedAt: Date
 }
 
 export type Period = 'daily' | 'weekly' | 'monthly'
