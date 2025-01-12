@@ -81,6 +81,8 @@ const items = [
   [{
     label: 'approved',
     click: async () => {
+      pending.value = true
+
       try {
         for (const user of selected.value) {
           await updateKYCStatus(user.userId, 'approved')
@@ -96,11 +98,15 @@ const items = [
           title: 'Error',
           description: 'Failed to update status to approved. Please try again later.'
         })
+      } finally {
+        pending.value = false
       }
     }
   }], [{
     label: 'rejected',
     click: async () => {
+      pending.value = true
+
       try {
         for (const user of selected.value) {
           await updateKYCStatus(user.userId, 'rejected')
@@ -116,12 +122,16 @@ const items = [
           title: 'Error',
           description: 'Failed to update status to rejected. Please try again later.'
         })
+      } finally {
+        pending.value = false
       }
     }
   }],
   [{
     label: 'pending',
     click: async () => {
+      pending.value = true
+
       try {
         for (const user of selected.value) {
           await updateKYCStatus(user.userId, 'pending')
@@ -137,6 +147,8 @@ const items = [
           title: 'Error',
           description: 'Failed to update status to pending. Please try again later.'
         })
+      } finally {
+        pending.value = false
       }
     }
   }]
