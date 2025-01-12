@@ -12,15 +12,9 @@ const state = reactive({
 const errorMessage = ref('')
 const loading = ref(false)
 
-const previewFiles = (event: Event): void => {
-  console.log(target)
-  const target = event.target as HTMLInputElement
-  const files = target.files as FileList
-
-  console.log(files)
+const previewFiles = (files: FileList): void => {
   state.documentFile = files[0]
 }
-
 const handleSubmit = async () => {
   if (!state.name || !state.documentFile) {
     errorMessage.value = 'All fields are required.'
@@ -33,13 +27,12 @@ const handleSubmit = async () => {
   try {
     const formData = new FormData()
     formData.append('name', state.name)
-    formData.append('documentFile', state.documentFile)
+    formData.append('idDocument', state.documentFile) // Ensure this matches the server's expected field name
 
     await submitKYC(formData)
     alert('KYC submitted successfully!')
   } catch (error) {
-    errorMessage.value = 'Failed to submit KYC. Please try again.'
-    console.error('KYC submission failed:', error)
+    errorMessage.value = error.data.message || 'Failed to submit KYC. Please try again.'
   } finally {
     loading.value = false
   }

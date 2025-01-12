@@ -10,8 +10,7 @@ export function useKyc() {
       method: 'POST',
       body: data,
       headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': authStore.token ? `Bearer ${authStore.token}` : ''
+        Authorization: authStore.token ? `Bearer ${authStore.token}` : ''
       }
     })
   }

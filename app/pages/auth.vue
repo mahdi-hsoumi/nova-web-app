@@ -70,7 +70,7 @@ const handleAuth = async () => {
       isLogin.value = true
     }
   } catch (error) {
-    errorMessage.value = error.response?.data?.message || `${isLogin.value ? 'Login' : 'Registration'} failed.`
+    errorMessage.value = error.data?.message || `${isLogin.value ? 'Login' : 'Registration'} failed.`
     console.error(`${isLogin.value ? 'Login' : 'Registration'} failed:`, error)
   } finally {
     loading.value = false

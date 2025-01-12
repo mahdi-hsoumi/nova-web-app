@@ -3,6 +3,7 @@ import { sub } from 'date-fns'
 import type { Period, Range } from '~/types'
 
 const authStore = useAuthStore()
+const { getKYC } = useKyc()
 
 const items = [[{
   label: 'New mail',
@@ -16,6 +17,23 @@ const items = [[{
 
 const range = ref<Range>({ start: sub(new Date(), { days: 14 }), end: new Date() })
 const period = ref<Period>('daily')
+const kycInfo = ref(null)
+const loading = ref(true)
+onMounted(async () => {
+  if (authStore.role === 'user') {
+    try {
+      const response = await getKYC()
+      console.log(response)
+      kycInfo.value = response
+    } catch (error) {
+      console.error('Failed to fetch KYC information:', error)
+    } finally {
+      loading.value = false
+    }
+  } else {
+    loading.value = false
+  }
+})
 </script>
 
 <template>
@@ -80,9 +98,35 @@ const period = ref<Period>('daily')
     </UDashboardPanel>
   </UDashboardPage>
   <div
-    v-else
-    class="w-full flex justify-center items-center"
+    v-else-if="authStore.role === 'user'"
+    class="flex justify-center items-center w-full h-full"
   >
-    <KycForm />
+    <div
+      v-if="loading"
+    >
+      Loading...
+    </div>
+    <div
+      v-else
+    >
+      <div v-if="kycInfo">
+        <h2 class="text-2xl font-semibold text-center mb-5">
+          KYC Information
+        </h2>
+        <p><strong>Name:</strong> {{ kycInfo.name }}</p>
+        <p><strong>Status:</strong> {{ kycInfo.status }}</p>
+        <strong>ID Document:</strong>
+        <img
+          :src="kycInfo.idDocument"
+          alt="ID Document"
+          class="max-w-[300px] h-auto rounded"
+        >
+      </div>
+      <div
+        v-else
+      >
+        <KycForm />
+      </div>
+    </div>
   </div>
 </template>
